@@ -50,11 +50,7 @@ public class Body {
         double r = calcDistance(b1);
         double f = calcForceExertedBy(b1);
 
-        if ((xxPos - b1.xxPos) >= 0){
-        	dx = this.xxPos - b1.xxPos;
-        } else {
-            dx = b1.xxPos - this.xxPos;
-        }
+        dx = b1.xxPos - this.xxPos;
     	fx = f*dx/r;
 
     	return fx;
@@ -66,11 +62,7 @@ public class Body {
         double r = calcDistance(b1);
         double f = calcForceExertedBy(b1);
 
-        if ((this.yyPos - b1.yyPos) >= 0){
-        	dy = this.yyPos - b1.yyPos;
-        } else {
-            dy = b1.yyPos - this.yyPos;
-        }
+        dy = b1.yyPos - this.yyPos;
     	fy = f*dy/r;
 
     	return fy;

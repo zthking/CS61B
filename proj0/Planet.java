@@ -1,3 +1,4 @@
+/*This is a copy of Body.java for Summer 18 Autograder.*/
 public class Planet {
     /*Define variables for Planet class. */
 	public double xxPos;

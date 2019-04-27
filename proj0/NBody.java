@@ -1,11 +1,11 @@
 public class NBody{
     
     /*Define variables. */
-	public static double T;
-	public static double dt;
-	public static String filename;
-	public static double r;
-	public static String imageToDraw;
+	private static double T;
+	private static double dt;
+	private static String filename;
+	private static double r;
+	private static String imageToDraw;
 
 	public static void main (String [] args) {
 
@@ -77,7 +77,7 @@ public class NBody{
 	}
  
     /*Draw background. */
-	public static void drawBackground() {
+	private static void drawBackground() {
 
 		StdDraw.setXscale(-r, r);
 		StdDraw.setYscale(-r, r);
@@ -86,7 +86,7 @@ public class NBody{
 	}
 
     /*Draw all planets. */
-	public static void drawAllBodies(Body[] drawAllPlanets) {
+	private static void drawAllBodies(Body[] drawAllPlanets) {
 		for (int i = 0; i < drawAllPlanets.length; i++) {
 		        drawAllPlanets[i].draw();
 		    }

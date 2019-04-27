@@ -6,8 +6,8 @@ public class Body {
 	public double yyVel;
 	public double mass;
 	public String imgFileName;
-    public String imageToDraw;
-    public static double g = 6.67e-11;
+    private String imageToDraw;
+    private double g = 6.67e-11;
 
     /*First constructor of the body class. */
 	public Body(double xP, double yP, double xV,

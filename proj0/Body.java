@@ -1,15 +1,15 @@
 public class Body {
+    /*Define variables for body class. */
 	public double xxPos;
 	public double yyPos;
 	public double xxVel;
 	public double yyVel;
 	public double mass;
 	public String imgFileName;
-
     public String imageToDraw;
-
     public static double g = 6.67e-11;
 
+    /*First constructor of the body class. */
 	public Body(double xP, double yP, double xV,
               double yV, double m, String img){
 		xxPos = xP;
@@ -20,6 +20,8 @@ public class Body {
 		imgFileName = img;
 	}
 
+    /**Second constructor of thebody class. 
+      *What is the purpose of this? */
     public Body(Body b){
     	xxPos = b.xxPos;
     	yyPos = b.yyPos;
@@ -29,9 +31,12 @@ public class Body {
     	imgFileName = b.imgFileName;
     }
 
+    /**Given a body, calculate the distance of two bodies 
+      *and return radius as double. */
     public double calcDistance(Body b1){
     	double r, rsquare;
-    	rsquare = (this.xxPos - b1.xxPos)*(this.xxPos - b1.xxPos) + (this.yyPos - b1.yyPos)*(this.yyPos - b1.yyPos);
+    	rsquare = (this.xxPos - b1.xxPos)*(this.xxPos - b1.xxPos) + 
+        (this.yyPos - b1.yyPos)*(this.yyPos - b1.yyPos);
     	r = Math.sqrt(rsquare);
 
     	return r;
@@ -108,13 +113,8 @@ public class Body {
     }
 
     public void draw(){
-        StdDraw.enableDoubleBuffering();
-
         imageToDraw = "images/" + this.imgFileName;
         StdDraw.picture(this.xxPos, this.yyPos, imageToDraw);
-
-        StdDraw.show();
-        StdDraw.pause(50);
     }
 
 }

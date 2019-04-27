@@ -27,7 +27,7 @@ public class NBody{
 		/**Give the value of radius and body array out of try and catch 
 		  *to avoid illegal start of expression. */
         r = readRadius(filename);
-		Planet[] planets = readBodies(filename);
+		Planet[] planets = readPlanets(filename);
 
         /*Draw background and initial location of all planets.*/
 		drawBackground();
@@ -103,7 +103,7 @@ public class NBody{
 	}
 
     /*Read the file and return all bodies as body array. */
-	public static Planet[] readBodies(String link) {
+	public static Planet[] readPlanets(String link) {
 
 		In in = new In(link);
 		int planetAmount = in.readInt();

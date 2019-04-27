@@ -4,7 +4,6 @@ public class NBody{
 	public static double dt;
 	public static String filename;
 	public static double r;
-	public static Body[] planets = new Body[5];
 
 	public static String imageToDraw;
 
@@ -15,8 +14,6 @@ public class NBody{
             T = Double.parseDouble(args[0]);
 			dt = Double.parseDouble(args[1]);
 			filename = args[2];
-			r = readRadius(filename);
-		    planets = readBodies(filename);
 
 		}catch(Exception e){
 
@@ -24,28 +21,15 @@ public class NBody{
       		
 		}
 
+        r = readRadius(filename);
+		Body[] planets = readBodies(filename);
+
 		drawBackground();
-		drawPlanets();
+		drawAllBodies(planets);
 
-		for (int t = 0; t < Math.round(T); t += dt){
-
-			double xForces[] = new double[planets.length];
-            double yForces[] = new double[planets.length];
-
-			for (int j = 0; j < planets.length; j++){
-				xForces[j] = planets[j].calcNetForceExertedByX(planets);
-				yForces[j] = planets[j].calcNetForceExertedByY(planets);
-
-			}
-            for (int i = 0; i < planets.length; i++){
-            	planets[i].update(dt, xForces[i], yForces[i]);
-            }
-
-            drawBackground();
-		    drawPlanets();
-
-		}
-
+		int time = (int) Math.round(T);
+		int deltaT = (int) Math.round(dt);
+		drawUpdateBodies(time, planets, deltaT);
 	}
 
 	public static void drawBackground(){
@@ -60,29 +44,51 @@ public class NBody{
 		StdDraw.pause(10);
 	}
 
-	public static void drawPlanets(){
-		for (int i = 0; i < planets.length; i++){
-		planets[i].draw();
+	public static void drawAllBodies(Body[] drawAllPlanets){
+		for (int i = 0; i < drawAllPlanets.length; i++){
+		        drawAllPlanets[i].draw();
+		    }
+	}
+
+	public static void drawUpdateBodies(int time, Body[] drawAllPlanets, int deltaT){
+
+		for (int t = 0; t < time; t += deltaT){
+
+			double xForces[] = new double[drawAllPlanets.length];
+            double yForces[] = new double[drawAllPlanets.length];
+
+			for (int j = 0; j < drawAllPlanets.length; j++){
+				xForces[j] = drawAllPlanets[j].calcNetForceExertedByX(drawAllPlanets);
+				yForces[j] = drawAllPlanets[j].calcNetForceExertedByY(drawAllPlanets);
+
+			}
+            for (int i = 0; i < drawAllPlanets.length; i++){
+            	drawAllPlanets[i].update(deltaT, xForces[i], yForces[i]);
+            }
+
+            drawBackground();
+		    drawAllBodies(drawAllPlanets);
+
 		}
 	}
 
 	public static double readRadius(String link){
 
         In in = new In(link);
-		int firstItemInFile = in.readInt();
-		double secondItemInFile = in.readDouble();
+		int discardFirstItem = in.readInt();
+		double radius = in.readDouble();
 
-		return secondItemInFile;
+		return radius;
 	}
 
 	public static Body[] readBodies(String link){
 
 		In in = new In(link);
-		int discardFirstItem = in.readInt();
+		int planetAmount = in.readInt();
 		double discardSecondItem = in.readDouble();
 
-		Body[] allPlanets = new Body[5];
-		for (int row = 0; row < 5; row++){
+		Body[] allPlanets = new Body[planetAmount];
+		for (int row = 0; row < planetAmount; row++){
 
 				allPlanets[row] = new Body(in.readDouble(), in.readDouble(), in.readDouble(), 
 					in.readDouble(), in.readDouble(), in.readString());

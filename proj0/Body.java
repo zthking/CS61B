@@ -114,7 +114,7 @@ public class Body {
         StdDraw.picture(this.xxPos, this.yyPos, imageToDraw);
 
         StdDraw.show();
-        StdDraw.pause(10);
+        StdDraw.pause(50);
     }
 
 }

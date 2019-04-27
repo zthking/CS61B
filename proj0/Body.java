@@ -6,6 +6,8 @@ public class Body {
 	public double mass;
 	public String imgFileName;
 
+    public String imageToDraw;
+
     public static double g = 6.67e-11;
 
 	public Body(double xP, double yP, double xV,
@@ -103,6 +105,16 @@ public class Body {
 
     	this.xxPos = this.xxPos + dt*this.xxVel;
     	this.yyPos = this.yyPos + dt*this.yyVel;
+    }
+
+    public void draw(){
+        StdDraw.enableDoubleBuffering();
+
+        imageToDraw = "images/" + this.imgFileName;
+        StdDraw.picture(this.xxPos, this.yyPos, imageToDraw);
+
+        StdDraw.show();
+        StdDraw.pause(10);
     }
 
 }

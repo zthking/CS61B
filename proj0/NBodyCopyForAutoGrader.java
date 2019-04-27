@@ -1,3 +1,5 @@
+/*This is a copy of NBody.java for Summer 18 Autograder.
+ *Copy this to NBody.java when submitting to Summer 18 Autograder. */
 public class NBodyCopyForAutoGrader{
     
     /*Define variables. */

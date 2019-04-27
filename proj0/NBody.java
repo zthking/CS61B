@@ -1,11 +1,11 @@
 public class NBody{
     
     /*Define variables. */
-	private static double T;
-	private static double dt;
-	private static String filename;
-	private static double r;
-	private static String imageToDraw;
+	public static double T;
+	public static double dt;
+	public static String filename;
+	public static double r;
+	public static String imageToDraw;
 
 	public static void main (String [] args) {
 
@@ -27,7 +27,7 @@ public class NBody{
 		/**Give the value of radius and body array out of try and catch 
 		  *to avoid illegal start of expression. */
         r = readRadius(filename);
-		Planet[] planets = readPlanets(filename);
+		Body[] planets = readBodies(filename);
 
         /*Draw background and initial location of all planets.*/
 		drawBackground();
@@ -77,7 +77,7 @@ public class NBody{
 	}
  
     /*Draw background. */
-	private static void drawBackground() {
+	public static void drawBackground() {
 
 		StdDraw.setXscale(-r, r);
 		StdDraw.setYscale(-r, r);
@@ -86,7 +86,7 @@ public class NBody{
 	}
 
     /*Draw all planets. */
-	private static void drawAllBodies(Planet[] drawAllPlanets) {
+	public static void drawAllBodies(Body[] drawAllPlanets) {
 		for (int i = 0; i < drawAllPlanets.length; i++) {
 		        drawAllPlanets[i].draw();
 		    }
@@ -103,15 +103,15 @@ public class NBody{
 	}
 
     /*Read the file and return all bodies as body array. */
-	public static Planet[] readPlanets(String link) {
+	public static Body[] readBodies(String link) {
 
 		In in = new In(link);
 		int planetAmount = in.readInt();
 		double discardSecondItem = in.readDouble();
 
-		Planet[] allPlanets = new Planet[planetAmount];
+		Body[] allPlanets = new Body[planetAmount];
 		for (int row = 0; row < planetAmount; row++) {
-				allPlanets[row] = new Planet(in.readDouble(), in.readDouble(), in.readDouble(), 
+				allPlanets[row] = new Body(in.readDouble(), in.readDouble(), in.readDouble(), 
 					in.readDouble(), in.readDouble(), in.readString());
 		}
 		return allPlanets;

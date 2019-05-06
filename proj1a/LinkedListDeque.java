@@ -1,58 +1,178 @@
-public class LinkedListDeque {
+/** Reference videos from YouTube.
+ *  https://www.youtube.com/watch?v=D34TOdo4UEk
+ *  https://www.youtube.com/watch?v=OGKkpWgg1Fs
+ */
 
-    /** Initiate a naked list StuffNode*/
-    private class StuffNode {
-        public int first;
-        public StuffNode next;
-        public StuffNode prev;
+public class LinkedListDeque<T> {
 
-        public StuffNode(StuffNode p, int f, StuffNode n) {
+    private class Node {
+        private T value;
+        private Node next;
+        private Node prev;
+
+        private Node(Node p, T v, Node n) {
             prev = p;
-            first = f;
+            value = v;
             next = n;
         }
     }
 
-    private StuffNode sentinel;
+    private Node sentinel;
     private int size;
 
     public LinkedListDeque() {
-        sentinel = new StuffNode(null, 777, null);
+        sentinel = new Node(null, null, null);
+        sentinel.next = sentinel;
+        sentinel.prev = sentinel;
         size = 0;
     }
 
-    public LinkedListDeque(int x) {
-        sentinel = new StuffNode(null, 777, null);
-        sentinel.next = new StuffNode(sentinel, x, null);
-        size = 1;
+    public void addFirst(T item) {
+         Node tempFirst = new Node(sentinel, item, sentinel.next);
+        sentinel.next.prev = tempFirst; //Must link the next Node of sentinel first.
+        sentinel.next = tempFirst;  //Must link sentinel to temp at second step.
+        size++;
     }
 
-    public void addFirst(int item) {
-        sentinel.next = new StuffNode(sentinel, item, sentinel.next);
-        sentinel.next.next.prev = sentinel.next.next;
-        size += 1;
-    }
-    public StuffNode addLast(int item) {
-        sentinel.next = new StuffNode(sentinel, item, null);
-        size += 1;
-        return sentinel;
+    public void addLast(T item) {
+        Node tempLast = new Node(sentinel.prev,item,sentinel);
+        sentinel.prev.next = tempLast;
+        sentinel.prev = tempLast;
+        size++;
     }
 
-    public int getFirst() {
-        return sentinel.next.first;
+    public T getFirst() {
+        return sentinel.next.value;
     }
-    public int getLast() {
-        return sentinel.next.first;
+
+    public T getLast() {
+        return sentinel.prev.value;
     }
+
+    public boolean isEmpty() {
+        return size == 0;
+    }
+
+    public int size() {
+        return size;
+    }
+
+    public void printDeque() {
+        if (size == 0) {
+            System.out.println("\n");
+        } else {
+            Node printNode = sentinel;
+            //String printAllNode = Integer.toString(printNode.next.first);
+            for (int i = 0; i<size; i++){
+                System.out.print(printNode.next.value + " ");
+                printNode = printNode.next;
+            }
+            System.out.println("\n");
+        }
+    }
+
+    private void delete(int index) {
+        if (index > size) {
+            throw new IllegalArgumentException();
+        } else {
+            Node current = sentinel;
+            int i = 0;
+            while (i < index) {
+                i++;
+                current = current.next;
+            }
+            current.prev.next = current.next;
+            current.next.prev = current.prev;
+            size--;
+        }
+    }
+    public T removeFirst() {
+        T t = get(1);
+        delete(1);
+        return t;
+    }
+    public T removeLast() {
+        T t = get(size);
+        delete(size);
+        return t;
+    }
+
+    public T get(int index) {
+        if (index > size) {
+            return null;
+        } else {
+            Node current = sentinel;
+            int i = 0;
+            while (i < index) {
+                i++;
+                current = current.next;
+            }
+            return current.value;
+        }
+    }
+
+    public T getRecursive(int index) {
+        if (index > size) {
+            return null;
+        } else if (index == 0) {
+            return null;
+        } else {
+                return getNodeRecursive(sentinel,index);
+        }
+    }
+
+    private T getNodeRecursive(Node current, int index) {
+        if (index == 0) {
+            return current.value;
+        }
+        return getNodeRecursive(current.next, index-1);
+    }
+/*
+    public void testForward() {
+        System.out.println(sentinel.value);
+        System.out.println(sentinel.next.value);
+        System.out.println(sentinel.next.next.value);
+        System.out.println(sentinel.next.next.next.value);
+    }
+
+    public void testBack() {
+        System.out.println(sentinel.value);
+        System.out.println(sentinel.prev.value);
+        System.out.println(sentinel.prev.prev.value);
+        System.out.println(sentinel.prev.prev.prev.value);
+    }
+
+    public void testAddFirst() {
+        addFirst(7);
+        addFirst(6);
+        addFirst(5);
+    }
+
+    public void testAddLast() {
+        addLast(8);
+        addLast(9);
+        addLast(10);
+    }
+
     public static void main(String[] args) {
-        LinkedListDeque L = new LinkedListDeque(7);
-        System.out.println(L.getFirst());
+        LinkedListDeque<Integer> L = new LinkedListDeque<>();
+        L.addFirst(7);
         L.addFirst(6);
-        System.out.println(L.getFirst());
         L.addFirst(5);
-        System.out.println(L.getFirst());
-        L.addFirst(8);
-        System.out.println(L.getFirst());
-        //System.out.println(L.next.getFirst());
+        L.addLast(8);
+        L.addLast(9);
+        L.addLast(10);
+        //L.testAddFirst();
+        //L.testAddLast();
+        //L.testAddFirst();
+        //L.testForward();
+        //System.out.println("\n");
+        //L.testBack();
+        L.printDeque();
+        //L.delete(2);
+        //System.out.println(L.getRecursive(5));
+        //L.testForward();
     }
+*/
+
 }

@@ -78,26 +78,28 @@ public class LinkedListDeque<T> {
 
     public T removeFirst() {
         if (size == 0) {
-            throw new IllegalArgumentException();
+            return null;
+        } else {
+            T t = getFirst();
+            Node current = sentinel.next;
+            current.prev.next = current.next;
+            current.next.prev = current.prev;
+            size--;
+            return t;
         }
-        T t = getFirst();
-        Node current = sentinel.next;
-        current.prev.next = current.next;
-        current.next.prev = current.prev;
-        size--;
-        return t;
     }
 
     public T removeLast() {
         if (size == 0) {
-            throw new IllegalArgumentException();
+            return null;
+        } else {
+            T t = getLast();
+            Node current = sentinel.prev;
+            current.prev.next = current.next;
+            current.next.prev = current.prev;
+            size--;
+            return t;
         }
-        T t = getLast();
-        Node current = sentinel.prev;
-        current.prev.next = current.next;
-        current.next.prev = current.prev;
-        size--;
-        return t;
     }
 
     public T get(int index) {

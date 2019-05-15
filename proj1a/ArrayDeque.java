@@ -1,3 +1,7 @@
+/**Reference video on YouTube.
+ * https://www.youtube.com/watch?v=z3R9-DkVtds
+ * @param <T>
+ */
 public class ArrayDeque<T> {
 
     private T[] items;
@@ -12,7 +16,7 @@ public class ArrayDeque<T> {
         size = 0;
     }
 
-    private void resize() {
+    private void upSize() {
         int s = size;
         N = 2 * N;
         int lastIndex = size + 1;
@@ -30,9 +34,27 @@ public class ArrayDeque<T> {
         items = newItems;
     }
 
+    private void downSize() {
+        int s = size;
+        int lastIndex = N;
+        N = N/2;
+        T[] newItems = (T[]) new Object[N];
+        int i = 0;
+        while (s > 0) {
+            s--;
+            newItems[i++] = items[front++];
+            if (front == lastIndex) {
+                front = 0;
+            }
+        }
+        rear = i;
+        front = 0;
+        items = newItems;
+    }
+
     public void addFirst(T item) {
         if (size == N - 1) {
-            resize();
+            upSize();
         }
 
         if (front == 0) {
@@ -47,7 +69,7 @@ public class ArrayDeque<T> {
 
     public void addLast(T item) {
         if (size == N - 1) {
-            resize();
+            upSize();
         }
 
         items[rear++] = item;
@@ -93,6 +115,10 @@ public class ArrayDeque<T> {
         }
 
         size--;
+        if (N > 8 && size < N/2 -1) {
+            downSize();
+        }
+
         return t;
     }
 
@@ -110,6 +136,10 @@ public class ArrayDeque<T> {
             rear--;
         }
         size--;
+        if (N > 8 && size < N/2 -1) {
+            downSize();
+        }
+
         return t;
     }
 
@@ -134,9 +164,13 @@ public class ArrayDeque<T> {
         L.addFirst(6);
         L.addFirst(5);
         L.addFirst(4);
+        L.addFirst(3);
+        L.addFirst(2);
+        L.addFirst(1);
         L.printDeque();
         L.removeLast();
         L.removeFirst();
+        L.removeLast();
         L.printDeque();
     }
 */

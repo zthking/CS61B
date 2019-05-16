@@ -1,21 +1,46 @@
-/**Reference video on YouTube.
+/**
+ * Deque in Java.
+ *
+ * Implement double-ended queues using array.
+ * This is for CS61B Spring 2019 Project 1A.
+ * https://sp19.datastructur.es/materials/proj/proj1a/proj1a
+ *
+ * Reference video on YouTube.
  * https://www.youtube.com/watch?v=z3R9-DkVtds
- * @param <T>
+ *
+ * @param <T> Generic array to save variables.
  */
 public class ArrayDeque<T> {
 
     private T[] items;
-    private int N; //N is the length of array.
+
+    /**
+     * Length of array.
+     */
+    private int N;
     private int front;
     private int rear;
-    private int size; //size = (N - front + rear) % N;
 
+    /**
+     * size = (N - front + rear) % N;
+     */
+    private int size;
+
+    /**
+     * Construct ArrayDeque.
+     * Initial array size is 8.
+     */
     public ArrayDeque() {
         N = 8;
         items = (T[]) new Object[N];
         size = 0;
     }
 
+    /**
+     * Double the array size.
+     * Copy the original array to the resized array.
+     * Set front to 0.
+     */
     private void upSize() {
         int s = size;
         N = 2 * N;
@@ -34,10 +59,15 @@ public class ArrayDeque<T> {
         items = newItems;
     }
 
+    /**
+     * Halve the array size.
+     * Copy the original array to the resized array.
+     * Set front to 0.
+     */
     private void downSize() {
         int s = size;
         int lastIndex = N;
-        N = N/2;
+        N = N / 2;
         T[] newItems = (T[]) new Object[N];
         int i = 0;
         while (s > 0) {
@@ -115,7 +145,7 @@ public class ArrayDeque<T> {
         }
 
         size--;
-        if (N > 8 && size < N/2 -1) {
+        if (N > 8 && size < N / 2 - 1) {
             downSize();
         }
 
@@ -136,7 +166,7 @@ public class ArrayDeque<T> {
             rear--;
         }
         size--;
-        if (N > 8 && size < N/2 -1) {
+        if (N > 8 && size < N / 2 - 1) {
             downSize();
         }
 
@@ -155,23 +185,4 @@ public class ArrayDeque<T> {
         return items[(front + index) % N];
 
     }
-/*
-    public static void main(String[] args) {
-        ArrayDeque<Integer> L = new ArrayDeque<>();
-        L.addLast(7);
-        L.addLast(8);
-        L.addLast(9);
-        L.addFirst(6);
-        L.addFirst(5);
-        L.addFirst(4);
-        L.addFirst(3);
-        L.addFirst(2);
-        L.addFirst(1);
-        L.printDeque();
-        L.removeLast();
-        L.removeFirst();
-        L.removeLast();
-        L.printDeque();
-    }
-*/
 }

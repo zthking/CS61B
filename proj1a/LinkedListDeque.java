@@ -35,6 +35,24 @@ public class LinkedListDeque<T> {
         size = 0;
     }
 
+    /**
+     * Deep copy of other.
+     * Create an entirely new LinkedListDeque, with the exact same items as other.
+     * However, they should be different objects,
+     * i.e. if you change other, the new LinkedListDeque you created should not change as well.
+     * <p>Not tested by AutoGrader.</p>
+     */
+    public  LinkedListDeque(LinkedListDeque other) {
+        sentinel = new Node(null, null, null);
+        sentinel.next = sentinel;
+        sentinel.prev = sentinel;
+        size = 0;
+
+        for (int i = 0; i < other.size(); i++) {
+            addLast((T) other.get(i));
+        }
+    }
+
     public void addFirst(T item) {
         Node tempFirst = new Node(sentinel, item, sentinel.next);
 

@@ -43,7 +43,8 @@ public class ArrayDeque<T> {
      * Create an entirely new LinkedListDeque, with the exact same items as other.
      * However, they should be different objects,
      * i.e. if you change other, the new LinkedListDeque you created should not change as well.
-     * <p>Not tested by AutoGrader. Comment out when running AutoGrader for Summer 2018.</p>
+     * <p>Not tested by AutoGrader.
+     * Comment out when running AutoGrader for Summer 2018.</p>
      */
     public ArrayDeque(ArrayDeque other) {
         N = 8;

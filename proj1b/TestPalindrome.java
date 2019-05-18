@@ -17,7 +17,7 @@ public class TestPalindrome {
     }
 
     @Test
-    public void isPalindrome() {
+    public void testIsPalindrome() {
         assertTrue(palindrome.isPalindrome(""));
         assertTrue(palindrome.isPalindrome("a"));
         assertTrue(palindrome.isPalindrome("bb"));
@@ -25,5 +25,12 @@ public class TestPalindrome {
         assertTrue(palindrome.isPalindrome("abcdcba"));
         assertFalse(palindrome.isPalindrome("cat"));
         assertFalse(palindrome.isPalindrome("cact"));
+    }
+
+    @Test
+    public void testNewIsPalindrome() {
+        OffByOne cc = new OffByOne();
+        boolean actual = palindrome.isPalindrome("flake", cc);
+        assertTrue(actual);
     }
 }

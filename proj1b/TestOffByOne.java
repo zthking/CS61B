@@ -8,7 +8,9 @@ public class TestOffByOne {
 
     @Test
     public void testOffByOne() {
-        boolean actual = offByOne.equalChars('a', 'b');
-        assertTrue(actual);
+        boolean actual1 = offByOne.equalChars('a', 'b');
+        boolean actual2 = offByOne.equalChars('c', 'e');
+        assertTrue(actual1);
+        assertFalse(actual2);
     }
 }

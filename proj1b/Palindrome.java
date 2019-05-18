@@ -40,7 +40,7 @@ public class Palindrome {
         if (length < 2) {
             return true;
         } else {
-            if (!cc.equalChars(charValue.removeLast(), charValue.removeFirst()))
+            if (!cc.equalChars(charValue.removeFirst(), charValue.removeLast()))
                 return false;
             else
                 return isPalindrome(charValue, cc);

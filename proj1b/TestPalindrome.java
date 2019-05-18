@@ -18,19 +18,19 @@ public class TestPalindrome {
 
     @Test
     public void testIsPalindrome() {
-        assertTrue(palindrome.isPalindrome(""));
+        //assertTrue(palindrome.isPalindrome(""));
+        assertTrue(palindrome.isPalindrome("noon"));
         assertTrue(palindrome.isPalindrome("a"));
-        assertTrue(palindrome.isPalindrome("bb"));
-        assertTrue(palindrome.isPalindrome("abccba"));
-        assertTrue(palindrome.isPalindrome("abcdcba"));
-        assertFalse(palindrome.isPalindrome("cat"));
-        assertFalse(palindrome.isPalindrome("cact"));
+        assertFalse(palindrome.isPalindrome("horse"));
+        assertFalse(palindrome.isPalindrome("rancor"));
     }
 
     @Test
     public void testNewIsPalindrome() {
         OffByOne cc = new OffByOne();
-        boolean actual = palindrome.isPalindrome("flake", cc);
-        assertTrue(actual);
+        boolean actual1 = palindrome.isPalindrome("flake", cc);
+        boolean actual2 = palindrome.isPalindrome("fish", cc);
+        assertTrue(actual1);
+        assertFalse(actual2);
     }
 }

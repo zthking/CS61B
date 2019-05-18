@@ -2,7 +2,7 @@
  * Copy from Proj 1A and revise to implement interface.
  * Check Proj 1A for more detail.
  */
-public class ArrayDeque<T> implements Deque<T>{
+public class ArrayDeque<T> implements Deque<T> {
 
     private T[] items;
     private int N;

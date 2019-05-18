@@ -23,10 +23,11 @@ public class Palindrome {
         if (length < 2) {
             return true;
         } else {
-            if (charValue.removeFirst() != charValue.removeLast())
+            if (charValue.removeFirst() != charValue.removeLast()) {
                 return false;
-            else
+            } else {
                 return isPalindrome(charValue);
+            }
         }
     }
 
@@ -40,10 +41,11 @@ public class Palindrome {
         if (length < 2) {
             return true;
         } else {
-            if (!cc.equalChars(charValue.removeFirst(), charValue.removeLast()))
+            if (!cc.equalChars(charValue.removeFirst(), charValue.removeLast())) {
                 return false;
-            else
+            } else {
                 return isPalindrome(charValue, cc);
+            }
         }
     }
 }

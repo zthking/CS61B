@@ -9,6 +9,6 @@ public class TestOffByOne {
     @Test
     public void testOffByOne() {
         boolean actual = offByOne.equalChars('a', 'b');
-        assertEquals(true, actual);
+        assertTrue(actual);
     }
 }

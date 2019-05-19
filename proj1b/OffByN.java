@@ -1,3 +1,7 @@
+/**
+ * Implement equalChars in CharacterComparator.
+ * Return true if two characters are different by input value N.
+ */
 public class OffByN implements CharacterComparator {
 
     private int offValue;

@@ -1,3 +1,7 @@
+/**
+ * Implement equalChars in CharacterComparator.
+ * Return true if two characters are different by exactly one.
+ */
 public class OffByOne implements CharacterComparator {
 
     @Override

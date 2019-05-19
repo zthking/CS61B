@@ -1,6 +1,7 @@
 /**
  * Copy from Proj 1A and revise to implement interface.
  * Check Proj 1A for more detail.
+ * Method is not actually used.
  */
 public class ArrayDeque<T> implements Deque<T> {
 

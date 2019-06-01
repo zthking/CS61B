@@ -45,6 +45,7 @@ public class Clorus extends Creature {
 
     public Action chooseAction(Map<Direction, Occupant> neighbors) {
         Deque<Direction> emptyNeighbors = new ArrayDeque<>();
+        Deque<Direction> plipNeighbors = new ArrayDeque<>();
         boolean anyPlip = false;
         boolean noEmptySpace = true;
 

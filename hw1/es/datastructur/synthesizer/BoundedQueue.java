@@ -1,11 +1,13 @@
 package es.datastructur.synthesizer;
 
+import java.util.Iterator;
+
 /**
  * API includes items that can only be enqueued at the back of the queue,
  * and can only be dequeued from the front of the queue.
  * It has a fixed capacity, and nothing is allowed to enqueue if the queue is full.
  */
-public interface BoundedQueue<T> {
+public interface BoundedQueue<T> extends Iterable<T> {
 
     /**
      *Return size of the buffer
@@ -46,4 +48,7 @@ public interface BoundedQueue<T> {
     default boolean isFull() {
         return (this.capacity() == this.fillCount());
     }
+
+    @Override
+    Iterator<T> iterator();
 }

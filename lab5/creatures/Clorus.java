@@ -40,6 +40,10 @@ public class Clorus extends Creature {
         return new Clorus(energy);
     }
 
+    /**
+     * Return Direction to a Deque in Map neighbors if Occupant equals to the string type.
+     * Helper method to find empty and plip neighbors.
+     */
     private Deque<Direction> typeNeighbors(String type, Map<Direction, Occupant> neighbors) {
         Deque<Direction> myNeighbors = new ArrayDeque<>();
         for (Map.Entry<Direction, Occupant> pair : neighbors.entrySet()) {

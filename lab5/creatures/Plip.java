@@ -119,10 +119,8 @@ public class Plip extends Creature {
         Deque<Direction> emptyNeighbors = new ArrayDeque<>();
         boolean anyClorus = false;
 
-
         for (Map.Entry<Direction, Occupant> pair : neighbors.entrySet()) {
-            boolean isEmpty = pair.getValue().name().equals("empty");
-            if (isEmpty) {
+            if (pair.getValue().name().equals("empty")) {
                 emptyNeighbors.add(pair.getKey());
             }
             if (!anyClorus) {
@@ -135,14 +133,8 @@ public class Plip extends Creature {
         } else if (this.energy >= 1) {
             return new Action(Action.ActionType.REPLICATE, randomEntry(emptyNeighbors));
         } else if (anyClorus) {
-            if (neighbors.get(Direction.TOP).name().equals("empty") && Math.random() < 0.5) {
-                return new Action(Action.ActionType.MOVE, Direction.TOP);
-            } else if (neighbors.get(Direction.BOTTOM).name().equals("empty") && Math.random() < 0.5) {
-                return new Action(Action.ActionType.MOVE, Direction.BOTTOM);
-            } else if (neighbors.get(Direction.LEFT).name().equals("empty") && Math.random() < 0.5) {
-                return new Action(Action.ActionType.MOVE, Direction.LEFT);
-            } else if (neighbors.get(Direction.RIGHT).name().equals("empty") && Math.random() < 0.5) {
-                return new Action(Action.ActionType.MOVE, Direction.RIGHT);
+            if (Math.random() < 0.5) {
+                return new Action(Action.ActionType.MOVE, randomEntry(emptyNeighbors));
             } else {
                 return new Action(Action.ActionType.STAY);
             }

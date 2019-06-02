@@ -1,9 +1,6 @@
 package creatures;
 
-import huglife.Action;
-import huglife.Creature;
-import huglife.Direction;
-import huglife.Occupant;
+import huglife.*;
 
 import java.awt.*;
 import java.util.ArrayDeque;
@@ -43,44 +40,27 @@ public class Clorus extends Creature {
         return new Clorus(energy);
     }
 
-    public Action chooseAction(Map<Direction, Occupant> neighbors) {
-        Deque<Direction> emptyNeighbors = new ArrayDeque<>();
-        Deque<Direction> plipNeighbors = new ArrayDeque<>();
-        boolean anyPlip = false;
-        boolean noEmptySpace = true;
-
+    private Deque<Direction> typeNeighbors(String type, Map<Direction, Occupant> neighbors) {
+        Deque<Direction> myNeighbors = new ArrayDeque<>();
         for (Map.Entry<Direction, Occupant> pair : neighbors.entrySet()) {
-            boolean isEmpty = pair.getValue().name().equals("empty");
-            if (isEmpty) {
-                emptyNeighbors.add(pair.getKey());
-            }
-            if (noEmptySpace) {
-                noEmptySpace = !isEmpty;
-            }
-            if (!anyPlip) {
-                anyPlip = pair.getValue().name().equals("plip");
+            if (pair.getValue().name().equals(type)) {
+                myNeighbors.add(pair.getKey());
             }
         }
+        return myNeighbors;
+    }
 
-        if (noEmptySpace) {
+    public Action chooseAction(Map<Direction, Occupant> neighbors) {
+        Deque<Direction> emptyNeighbors = typeNeighbors("empty", neighbors);
+        Deque<Direction> plipNeighbors = typeNeighbors("plip", neighbors);
+
+        if (emptyNeighbors.size() == 0) {
             return new Action(Action.ActionType.STAY);
-        } else if (anyPlip) {
-            if (neighbors.get(Direction.TOP).name().equals("plip")) {
-                return new Action(Action.ActionType.ATTACK, Direction.TOP);
-            } else if (neighbors.get(Direction.BOTTOM).name().equals("plip")) {
-                return new Action(Action.ActionType.ATTACK, Direction.BOTTOM);
-            } else if (neighbors.get(Direction.LEFT).name().equals("plip")) {
-                return new Action(Action.ActionType.ATTACK, Direction.LEFT);
-            } else if (neighbors.get(Direction.RIGHT).name().equals("plip")) {
-                return new Action(Action.ActionType.ATTACK, Direction.RIGHT);
-            } else {
-                return new Action(Action.ActionType.STAY);
-            }
+        } else if (plipNeighbors.size() != 0) {
+            return new Action(Action.ActionType.ATTACK, randomEntry(plipNeighbors));
         } else if (this.energy >= 1) {
             return new Action(Action.ActionType.REPLICATE, randomEntry(emptyNeighbors));
         }
         return new Action(Action.ActionType.MOVE, randomEntry(emptyNeighbors));
     }
-
-
 }

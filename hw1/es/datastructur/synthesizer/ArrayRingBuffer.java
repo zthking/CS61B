@@ -4,7 +4,7 @@ import java.util.Iterator;
 /**
  * Implement BoundedQueue<T>
  */
-public class ArrayRingBuffer<T> implements BoundedQueue<T>{
+public class ArrayRingBuffer<T> implements BoundedQueue<T> {
     /** Index for the next dequeue or peek. */
     private int first;
     /** Index for the next enqueue. */
@@ -87,14 +87,6 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T>{
         return rb[first];
     }
 
-    public static void main(String[] args) {
-        int r = (int) Math.round(0.4);
-        System.out.println(r);
-    }
-
-    // TODO: When you get to part 4, implement the needed code to support
-    //       iteration and equals.
-
     @Override
     public Iterator<T> iterator() {
         return new ArrayRingBufferIterator();
@@ -102,17 +94,27 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T>{
 
     private class ArrayRingBufferIterator implements Iterator<T> {
         private int wizPos;
+        private int location;
 
         public ArrayRingBufferIterator() {
             wizPos = 0;
+            location = first;
         }
 
         public boolean hasNext() {
             return wizPos < fillCount;
         }
 
+        /**
+         * Do not use dequeue and enqueue.
+         * Otherwise, nested iteration will be wrong.
+         */
         public T next() {
-            T returnItem = dequeue();
+            T returnItem = rb[location];
+            location += 1;
+            if (location == capacity()) {
+                location = 0;
+            }
             wizPos += 1;
             return returnItem;
         }
@@ -136,8 +138,14 @@ public class ArrayRingBuffer<T> implements BoundedQueue<T>{
         if (other.fillCount() != this.fillCount()) {
             return false;
         }
+
+        ArrayRingBuffer<T> cmp = new ArrayRingBuffer<>(other.capacity());
+        for (T itemInO : other) {
+            cmp.enqueue(itemInO);
+        }
+
         for (T item : this) {
-            if (other.dequeue() != item) {
+            if (cmp.dequeue() != item) {
                 return false;
             }
         }

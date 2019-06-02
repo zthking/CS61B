@@ -35,11 +35,12 @@ public class GuitarString {
 
         for (int i = 1; i < buffer.capacity(); i++) {
             number = Math.random() - 0.5;
-            randomNumbers[i] = number;
-            buffer.dequeue();
-            buffer.enqueue(number);
             if (Arrays.asList(randomNumbers).contains(number)) {
                 i -= 1;
+            } else {
+                randomNumbers[i] = number;
+                buffer.dequeue();
+                buffer.enqueue(number);
             }
         }
     }

@@ -7,7 +7,7 @@ public class PercolationStats {
 
     private int times;
     private int boundary;
-
+    private double[] frictions;
     private Percolation[] p;
 
     public PercolationStats(int N, int T, PercolationFactory pf) {
@@ -17,36 +17,42 @@ public class PercolationStats {
         boundary = N;
         times = T;
         p = new Percolation[T];
+        frictions = new double[times];
         //Percolation pMaker = pf.make(N);
         for (int i = 0; i < T; i += 1) {
             p[i] = pf.make(N);
         }
     }
 
-    private double[] runPercolation() {
-        Percolation[] pTemp = p;
-        double[] frictions = new double[times];
+    private void runPercolation() {
         int row;
         int col;
         for (int i = 0; i < times; i += 1) {
-            do {
+            while (!p[i].percolates()) {
                 row = StdRandom.uniform(0, boundary);
                 col = StdRandom.uniform(0, boundary);
-                if (!pTemp[i].isOpen(row, col)) {
-                    pTemp[i].open(row, col);
+                if (!p[i].isOpen(row, col)) {
+                    p[i].open(row, col);
                 }
-            } while (pTemp[i].percolates());
+            }
             frictions[i] = (double) p[i].numberOfOpenSites() / boundary / boundary;
         }
-        return frictions;
     }
 
     public double mean() {
-        return StdStats.mean(runPercolation());
+        if (frictions[0] != 0.0d) {
+            return StdStats.mean(frictions);
+        }
+        runPercolation();
+        return StdStats.mean(frictions);
     }
 
     public double stddev() {
-        return StdStats.stddev(runPercolation());
+        if (frictions[0] != 0.0d) {
+            return StdStats.stddev(frictions);
+        }
+        runPercolation();
+        return StdStats.stddev(frictions);
     }
 
     public double confidenceLow() {

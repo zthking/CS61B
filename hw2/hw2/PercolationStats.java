@@ -18,16 +18,20 @@ public class PercolationStats {
         times = T;
         p = new Percolation[T];
         frictions = new double[times];
-        //Percolation pMaker = pf.make(N);
+        Percolation pMaker = pf.make(N);
+        runPercolation(pMaker);
+        /*
         for (int i = 0; i < T; i += 1) {
             p[i] = pf.make(N);
         }
+         */
     }
 
-    private void runPercolation() {
+    private void runPercolation(Percolation pMaker) {
         int row;
         int col;
         for (int i = 0; i < times; i += 1) {
+            p[i] = pMaker;
             while (!p[i].percolates()) {
                 row = StdRandom.uniform(0, boundary);
                 col = StdRandom.uniform(0, boundary);
@@ -40,18 +44,23 @@ public class PercolationStats {
     }
 
     public double mean() {
+        /*
         if (frictions[0] != 0.0d) {
             return StdStats.mean(frictions);
         }
         runPercolation();
+         */
         return StdStats.mean(frictions);
     }
 
     public double stddev() {
+        /*
         if (frictions[0] != 0.0d) {
             return StdStats.stddev(frictions);
         }
         runPercolation();
+
+         */
         return StdStats.stddev(frictions);
     }
 

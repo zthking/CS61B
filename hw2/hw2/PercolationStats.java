@@ -17,9 +17,9 @@ public class PercolationStats {
         boundary = N;
         times = T;
         p = new Percolation[T];
-        Percolation pMaker = pf.make(N);
+        //Percolation pMaker = pf.make(N);
         for (int i = 0; i < T; i += 1) {
-            p[i] = pMaker;
+            p[i] = pf.make(N);
         }
     }
 

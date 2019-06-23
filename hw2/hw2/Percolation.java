@@ -2,14 +2,7 @@ package hw2;
 
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
-import java.util.stream.IntStream;
-
 public class Percolation {
-
-    /**
-     * 2D array represents the ID of each cell.
-     */
-    private int[][] gridID;
 
     /**
      * 2D array represents the status of each cell.
@@ -51,7 +44,6 @@ public class Percolation {
 
     public Percolation(int N) {
         handleException(N);
-        gridID = new int[N][N];
         gridStatus = new boolean[N][N];
         boundary = N;
         numberOfOpenGrid = 0;
@@ -64,10 +56,6 @@ public class Percolation {
         gridNoDummyBottom = new WeightedQuickUnionUF(N * N + 1);
         dummyTop = N * N;
         dummyBottom = N * N + 1;
-
-        for (int i = 0; i < N; i++) {
-            gridID[i] = IntStream.rangeClosed(i * boundary, ((i + 1) * boundary - 1)).toArray();
-        }
     }
 
     /**
@@ -113,18 +101,26 @@ public class Percolation {
     }
 
     /**
+     * Convert row and column to ID that can be used for weighted quick union.
+     */
+    private int convertToID(int row, int col) {
+        return row * boundary + col;
+    }
+
+    /**
      * Connect open cell in first row to the dummy top.
      */
     private void connectToDummyTop(int col) {
-        gridConnection.union(gridID[0][col], dummyTop);
-        gridNoDummyBottom.union(gridID[0][col], dummyTop);
+        gridConnection.union(col, dummyTop);
+        gridNoDummyBottom.union(col, dummyTop);
     }
 
     /**
      * Connect open cell in last row to the dummy top.
      */
     private void connectToDummyBottom(int col) {
-        gridConnection.union(gridID[boundary - 1][col], dummyBottom);
+        int id = convertToID(boundary - 1, col);
+        gridConnection.union(id, dummyBottom);
     }
 
     /**
@@ -135,25 +131,23 @@ public class Percolation {
      * @param col Column of the cell.
      */
     private void connectOpenNeighbor(int row, int col) {
-        int up = row - 1;
-        int down = row + 1;
-        int left = col - 1;
-        int right = col + 1;
-        if (up >= 0 && isOpen(up, col)) {
-            gridConnection.union(gridID[row][col], gridID[up][col]);
-            gridNoDummyBottom.union(gridID[row][col], gridID[up][col]);
+        int idCurrent = convertToID(row, col);
+
+        if (row -1 >= 0 && isOpen(row - 1, col)) {
+            gridConnection.union(idCurrent, idCurrent - boundary);
+            gridNoDummyBottom.union(idCurrent, idCurrent - boundary);
         }
-        if (down < boundary && isOpen(down, col)) {
-            gridConnection.union(gridID[row][col], gridID[down][col]);
-            gridNoDummyBottom.union(gridID[row][col], gridID[down][col]);
+        if (row + 1 < boundary && isOpen(row + 1, col)) {
+            gridConnection.union(idCurrent, idCurrent + boundary);
+            gridNoDummyBottom.union(idCurrent, idCurrent + boundary);
         }
-        if (left >= 0 && isOpen(row, left)) {
-            gridConnection.union(gridID[row][col], gridID[row][left]);
-            gridNoDummyBottom.union(gridID[row][col], gridID[row][left]);
+        if (col - 1 >= 0 && isOpen(row, col - 1)) {
+            gridConnection.union(idCurrent, idCurrent - 1);
+            gridNoDummyBottom.union(idCurrent, idCurrent - 1);
         }
-        if (right < boundary && isOpen(row, right)) {
-            gridConnection.union(gridID[row][col], gridID[row][right]);
-            gridNoDummyBottom.union(gridID[row][col], gridID[row][right]);
+        if (col + 1 < boundary && isOpen(row, col + 1)) {
+            gridConnection.union(idCurrent, idCurrent + 1);
+            gridNoDummyBottom.union(idCurrent, idCurrent + 1);
         }
     }
 
@@ -173,7 +167,8 @@ public class Percolation {
      * @return True if the cell is connected to row 0; otherwise false.
      */
     public boolean isFull(int row, int col) {
-        return gridNoDummyBottom.connected(gridID[row][col], dummyTop);
+        int idCurrent = convertToID(row, col);
+        return gridNoDummyBottom.connected(idCurrent, dummyTop);
     }
 
     /**

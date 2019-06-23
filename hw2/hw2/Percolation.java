@@ -133,7 +133,7 @@ public class Percolation {
     private void connectOpenNeighbor(int row, int col) {
         int idCurrent = convertToID(row, col);
 
-        if (row -1 >= 0 && isOpen(row - 1, col)) {
+        if (row - 1 >= 0 && isOpen(row - 1, col)) {
             gridConnection.union(idCurrent, idCurrent - boundary);
             gridNoDummyBottom.union(idCurrent, idCurrent - boundary);
         }

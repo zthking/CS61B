@@ -5,7 +5,6 @@ import edu.princeton.cs.introcs.StdStats;
 
 public class PercolationStats {
 
-    //private Percolation p;
     private int times;
     private int boundary;
     private int[] totalRuns;
@@ -18,50 +17,36 @@ public class PercolationStats {
         boundary = N;
         times = T;
         p = new Percolation[T];
+        Percolation pTemp = pf.make(N);
         for (int i = 0; i < T; i += 1) {
-            p[i] = pf.make(N);
+            p[i] = pTemp;
         }
-        //p = pf.make(N);
         totalRuns = new int[times];
     }
 
-    /*
     private void runPercolation() {
-        for (int i = 0; i < times; i += 1) {
-            do {
-                p.open(StdRandom.uniform(0,boundary), StdRandom.uniform(0,boundary));
-            } while (p.percolates());
-            totalRuns[i] = p.numberOfOpenSites();
-        }
-    }
-*/
-    private void runPercolation() {
+        PercolationFactory pf = new PercolationFactory();
+        Percolation pTemp = pf.make(times);
         for (int i = 0; i < times; i += 1) {
             do {
                 p[i].open(StdRandom.uniform(0, boundary), StdRandom.uniform(0, boundary));
             } while (p[i].percolates());
             totalRuns[i] = p[i].numberOfOpenSites();
+            p[i] = pTemp;
         }
     }
 
     public double mean() {
-        if (totalRuns[0] != 0) {
-            return StdStats.mean(totalRuns);
-        }
-       runPercolation();
-       return StdStats.mean(totalRuns);
+        runPercolation();
+        return StdStats.mean(totalRuns);
     }
 
     public double stddev() {
-        if (totalRuns[0] != 0) {
-            return StdStats.stddev(totalRuns);
-        }
         runPercolation();
         return StdStats.stddev(totalRuns);
     }
 
     public double confidenceLow() {
-
         return this.mean() - 1.96 * this.stddev() / Math.sqrt(times);
     }
 

@@ -23,16 +23,22 @@ public class PercolationStats {
         }
     }
 
-    private int[] runPercolation() {
+    private double[] runPercolation() {
         Percolation[] pTemp = p;
-        int[] totalRuns = new int[times];
+        double[] frictions = new double[times];
+        int row;
+        int col;
         for (int i = 0; i < times; i += 1) {
             do {
-                pTemp[i].open(StdRandom.uniform(0, boundary), StdRandom.uniform(0, boundary));
+                row = StdRandom.uniform(0, boundary);
+                col = StdRandom.uniform(0, boundary);
+                if (!pTemp[i].isOpen(row, col)) {
+                    pTemp[i].open(row, col);
+                }
             } while (pTemp[i].percolates());
-            totalRuns[i] = p[i].numberOfOpenSites();
+            frictions[i] = (double) p[i].numberOfOpenSites() / boundary / boundary;
         }
-        return totalRuns;
+        return frictions;
     }
 
     public double mean() {

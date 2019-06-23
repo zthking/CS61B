@@ -2,6 +2,8 @@ package hw2;
 
 import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
+import java.util.stream.IntStream;
+
 public class Percolation {
 
     /**
@@ -63,13 +65,18 @@ public class Percolation {
         dummyTop = N * N;
         dummyBottom = N * N + 1;
 
-        int temp = 0;
+        //int temp = 0;
         for (int i = 0; i < N; i++) {
+
+            gridID[i] = IntStream.rangeClosed(i * boundary, ((i + 1) * boundary - 1) ).toArray();
+            /*
             for (int j = 0; j < N; j++) {
                 gridStatus[i][j] = false;
                 gridID[i][j] = temp;
                 temp += 1;
             }
+
+             */
         }
     }
 

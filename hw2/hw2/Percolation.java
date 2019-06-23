@@ -34,6 +34,7 @@ public class Percolation {
      * Duplicated weighted quick union with no dummy bottom.
      */
     private WeightedQuickUnionUF gridNoDummyBottom;
+
     /**
      * Represents a single dummy cell above the first row.
      * This dummy top is used for return percolation status.
@@ -85,10 +86,7 @@ public class Percolation {
      * Validate input number.
      */
     private void handleException(int row, int col) {
-        if (row < 0 || col < 0) {
-            throw new IllegalArgumentException();
-        }
-        if (row >= boundary || col >= boundary) {
+        if (row >= boundary || col >= boundary || row < 0 || col < 0) {
             throw new IndexOutOfBoundsException();
         }
     }
@@ -100,6 +98,9 @@ public class Percolation {
      * @param col Column of the cell.
      */
     public void open(int row, int col) {
+        if (isOpen(row, col)) {
+            return;
+        }
         handleException(row, col);
         gridStatus[row][col] = true;
         numberOfOpenGrid += 1;

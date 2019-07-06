@@ -1,3 +1,4 @@
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -28,11 +29,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
      */
     @Override
     public void clear() {
-        //root.size = 0;
         root = null;
-        //root = new Node(null, null, 0);
-        //root.left = null;
-        //root.right = null;
     }
 
     /* Returns true if this map contains a mapping for the specified key. */
@@ -108,6 +105,19 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         return n;
     }
 
+    public void printInOrder() {
+        printInOrder(root);
+    }
+
+    private void printInOrder(Node n) {
+        if (n == null) {
+            return;
+        }
+        printInOrder(n.left);
+        System.out.println(n.val);
+        printInOrder(n.right);
+    }
+
     /* Returns a Set view of the keys contained in this map. */
     @Override
     public Set<K> keySet() {
@@ -133,9 +143,5 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     @Override
     public Iterator<K> iterator() {
         throw new UnsupportedOperationException();
-    }
-
-    public void printInOrder() {
-        System.out.println(root.val);
     }
 }

@@ -11,7 +11,7 @@ public class OomageTestUtility {
         }
 
         for (int n : numInBucket) {
-            if (n < (oomages.size() / 50) && n > (oomages.size() / 2.5)) {
+            if (n < (oomages.size() / 50) || n > (oomages.size() / 2.5)) {
                 return false;
             }
         }

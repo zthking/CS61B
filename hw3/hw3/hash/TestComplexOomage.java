@@ -1,5 +1,6 @@
 package hw3.hash;
 
+import edu.princeton.cs.algs4.StdRandom;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -33,14 +34,13 @@ public class TestComplexOomage {
     @Test
     public void testWithDeadlyParams() {
         List<Oomage> deadlyList = new ArrayList<>();
-        for (int i = 1; i < 50; i = i * 5) {
-            ArrayList<Integer> params = new ArrayList<>();
-            for (int j = 1; j < 50; j = j *5) {
-                params.add(j);
-            }
-            ComplexOomage oom = new ComplexOomage(params);
-            deadlyList.add(oom);
+        ArrayList<Integer> params = new ArrayList<>();
+        for (int i = 0; i < 10000; i++) {
+            params.add(255);
+            ComplexOomage co = new ComplexOomage(params);
+            deadlyList.add(co);
         }
+
         assertTrue(OomageTestUtility.haveNiceHashCodeSpread(deadlyList, 10));
     }
 

@@ -2,107 +2,19 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+/**
+ * Implementation of HashMap.
+ */
 public class MyHashMap<K, V> implements Map61B<K, V> {
-    private class Entry {
-        private K key;
-        private V value;
-        private Entry next;
+    private int size;                       // number of key-value pairs
+    private int tableSize;                  // hash table size
+    private double loadFactor;              // load factor to resize the table
+    private MyHashMap<K, V>.Entry[] table;  // array to be used as hash table
+    private Set<K> keySet;                  // set to save all added key
 
-        public Entry(K k, V v, Entry next) {
-            this.key = k;
-            this.value = v;
-            this.next = next;
-        }
-
-        public K getKeyInEntry() {
-            if (key == null) {
-                return null;
-            }
-            return this.key;
-        }
-
-        public V getValueInEntry(K k) {
-            if (k == null) {
-                throw new IllegalArgumentException();
-            }
-            return getValueInEntry(k, this);
-        }
-
-        private V getValueInEntry(K k, Entry entry) {
-            if (k == null) {
-                throw new IllegalArgumentException();
-            }
-            if (entry == null) {
-                return null;
-            }
-            if (entry.key.equals(k)) {
-                return entry.value;
-            }
-            return getValueInEntry(k, entry.next);
-        }
-
-        public boolean hasKey(K k) {
-            if (k == null) {
-                throw new IllegalArgumentException();
-            }
-            return hasKey(k, this);
-        }
-
-        private boolean hasKey(K k, Entry entry) {
-            if (k == null) {
-                throw new IllegalArgumentException();
-            }
-            if (entry == null) {
-                return false;
-            }
-            if (entry.key == k) {
-                return true;
-            }
-            return hasKey(k, entry.next);
-        }
-
-        public Entry addOrReplaceValue(K k, V v) {
-            if (k == null) {
-                throw new IllegalArgumentException();
-            }
-            return addOrReplaceValue(k, v, this);
-        }
-
-        private Entry addOrReplaceValue(K k, V v, Entry entry) {
-            if (k == null) {
-                throw new IllegalArgumentException();
-            }
-            if (entry == null) {
-                entry = new Entry(k, v, null);
-                return entry;
-            }
-            if (entry.key == k) {
-                entry.value = v;
-                return entry;
-            }
-            return addOrReplaceValue(k, v, entry.next);
-        }
-
-        public Entry addEntry(Entry oldEntry, Entry aEntry) {
-            if (aEntry == null) {
-                throw new IllegalArgumentException();
-            }
-            if (oldEntry == null) {
-                return aEntry;
-            }
-            if (oldEntry.next == null) {
-                oldEntry.next = aEntry;
-            }
-            return addEntry(oldEntry.next, aEntry);
-        }
-    }
-
-    private int size;
-    private int tableSize;
-    private double loadFactor;
-    private MyHashMap<K, V>.Entry[] table;
-    private Set<K> keySet;
-
+    /**
+     * Initialize an empty symbol table.
+     */
     public MyHashMap() {
         size = 0;
         tableSize = 16;
@@ -111,6 +23,9 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         keySet = new HashSet<>();
     }
 
+    /**
+     * Initialize an empty symbol table with table size.
+     */
     public MyHashMap(int initialSize) {
         size = 0;
         tableSize = initialSize;
@@ -118,6 +33,9 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         table = (MyHashMap<K, V>.Entry[]) new MyHashMap.Entry[tableSize];
     }
 
+    /**
+     * Initialize an empty symbol table with table size and load factor.
+     */
     public MyHashMap(int initialSize, double loadFactor) {
         size = 0;
         tableSize = initialSize;
@@ -132,8 +50,13 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         return (key.hashCode() & 0x7FFFFFFF) % tableSize;
     }
 
+    /**
+     * Resize the hash table to have the given number of table size
+     * and rehash all of the keys.
+     */
     private void resize(int newTableSize) {
-        MyHashMap<K, V>.Entry[] newTable = (MyHashMap<K, V>.Entry[]) new MyHashMap.Entry[newTableSize];
+        MyHashMap<K, V>.Entry[] newTable =
+                (MyHashMap<K, V>.Entry[]) new MyHashMap.Entry[newTableSize];
         Set<K> oldSet = this.keySet();
         for (K k : oldSet) {
             int reHash = (k.hashCode() & 0x7FFFFFFF) % newTableSize;
@@ -254,27 +177,106 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * Implementation of iterator.
+     */
     public Iterator<K> iterator() {
-        return new MyHashMapIterator();
+        return keySet.iterator();
     }
 
-    private class MyHashMapIterator implements Iterator<K> {
-        private int wizPos;
+    /**
+     * Linked list to save key-value pair.
+     */
+    private class Entry {
+        private K key;
+        private V value;
+        private Entry next;
 
-        public MyHashMapIterator() {
-            wizPos = 0;
+        public Entry(K k, V v, Entry next) {
+            this.key = k;
+            this.value = v;
+            this.next = next;
         }
 
-        public boolean hasNext() {
-            return wizPos < size;
+        /**
+         * Return the value at give key. If the key is not mapped, return null.
+         */
+        public V getValueInEntry(K k) {
+            if (k == null) {
+                throw new IllegalArgumentException();
+            }
+            return getValueInEntry(k, this);
         }
 
-        public K next() {
-            //ste[wizPos].keySet();
-            //wizPos += 1;
-            //K returnKey = table[wizPos].getKeyInEntry();
-            wizPos += 1;
-            return null;
+        /**
+         * Helper method to return the value at give key. If the key is not mapped, return null.
+         */
+        private V getValueInEntry(K k, Entry entry) {
+            if (k == null) {
+                throw new IllegalArgumentException();
+            }
+            if (entry == null) {
+                return null;
+            }
+            if (entry.key.equals(k)) {
+                return entry.value;
+            }
+            return getValueInEntry(k, entry.next);
+        }
+
+        /**
+         * Return true if the entry has given key. Otherwise, return false.
+         */
+        public boolean hasKey(K k) {
+            if (k == null) {
+                throw new IllegalArgumentException();
+            }
+            return hasKey(k, this);
+        }
+
+        /**
+         * Helper method to return true if the entry has given key. Otherwise, return false.
+         */
+        private boolean hasKey(K k, Entry entry) {
+            if (k == null) {
+                throw new IllegalArgumentException();
+            }
+            if (entry == null) {
+                return false;
+            }
+            if (entry.key == k) {
+                return true;
+            }
+            return hasKey(k, entry.next);
+        }
+
+        /**
+         * If the given key is not mapped in the entry, add the key-map pair to entry.
+         * If the give key is mapped, replace the old value with the new value.
+         */
+        public Entry addOrReplaceValue(K k, V v) {
+            if (k == null) {
+                throw new IllegalArgumentException();
+            }
+            return addOrReplaceValue(k, v, this);
+        }
+
+        /**
+         * Helper method of addOrReplaceValue method.
+         */
+        private Entry addOrReplaceValue(K k, V v, Entry entry) {
+            if (k == null) {
+                throw new IllegalArgumentException();
+            }
+            if (entry == null) {
+                entry = new Entry(k, v, null);
+                return entry;
+            }
+            if (entry.key == k) {
+                entry.value = v;
+                return entry;
+            }
+            return addOrReplaceValue(k, v, entry.next);
         }
     }
 }

@@ -48,7 +48,8 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     }
 
     /**
-     * Returns the minimum item. Throws NoSuchElementException if the PQ is empty.
+     * Returns the minimum item.
+     * Throws NoSuchElementException if the PQ is empty.
      */
     @Override
     public T getSmallest() {
@@ -110,9 +111,9 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         }
     }
 
-    /***************************************************************************
+    /************************************************************
      * Helper functions for compares and swaps.
-     ***************************************************************************/
+     ************************************************************/
     private boolean lessThan(int i, int j) {
         if (pq.get(i).getPriority() == pq.get(j).getPriority()) {
             if (Math.random() > 0.5) {

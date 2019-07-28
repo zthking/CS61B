@@ -92,6 +92,11 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     }
 
     private boolean lessThan(int i, int j) {
+        if (pq.get(i).getPriority() == pq.get(j).getPriority()) {
+            if (Math.random() > 0.5) {
+                return true;
+            }
+        }
         return pq.get(i).getPriority() < pq.get(j).getPriority();
     }
 

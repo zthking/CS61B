@@ -83,10 +83,10 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         int index = pqMap.get(item);
         double oldPriority = pq.get(index).getPriority();
         pq.get(index).setPriority(priority);
-        if(priority > oldPriority) {
+        if (priority > oldPriority) {
             sink(index);
         }
-        if(priority < oldPriority) {
+        if (priority < oldPriority) {
             swim(index);
         }
     }
@@ -111,7 +111,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     private void swim(int child) {
         while (child > 1) {
             int parent = child / 2;
-            if(!lessThan(child, parent)) {
+            if (!lessThan(child, parent)) {
                 break;
             }
             swap(child, parent);
@@ -125,7 +125,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
             if (child < size && !lessThan(child, child + 1)) {
                 child += 1;
             }
-            if(lessThan(parent, child)) {
+            if (lessThan(parent, child)) {
                 break;
             }
             swap(parent, child);

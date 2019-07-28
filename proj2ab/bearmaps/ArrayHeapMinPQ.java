@@ -4,11 +4,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.NoSuchElementException;
 
+/**
+ * Implementation of HeapMinPQ using ArrayList.
+ * HashMap is used for contain function.
+ */
 public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     private ArrayList<Node> pq;
     private HashMap<T, Integer> pqMap;
     private int size;
 
+    /**
+     * Initialize an empty ArrayHeapMinPQ.
+     */
     public ArrayHeapMinPQ() {
         pq = new ArrayList<>();
         pq.add(null);
@@ -17,9 +24,10 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         size = 0;
     }
 
-    /* Adds an item with the given priority value. Throws an
+    /**
+     * Adds an item with the given priority value. Throws an
      * IllegalArgumentExceptionb if item is already present.
-     * You may assume that item is never null. */
+     */
     @Override
     public void add(T item, double priority) {
         if (contains(item)) {
@@ -31,13 +39,17 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         swim(size);
     }
 
-    /* Returns true if the PQ contains the given item. */
+    /**
+     * Returns true if the PQ contains the given item.
+     */
     @Override
     public boolean contains(T item) {
         return pqMap.containsKey(item);
     }
 
-    /* Returns the minimum item. Throws NoSuchElementException if the PQ is empty. */
+    /**
+     * Returns the minimum item. Throws NoSuchElementException if the PQ is empty.
+     */
     @Override
     public T getSmallest() {
         if (size == 0) {
@@ -46,7 +58,10 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         return pq.get(1).getItem();
     }
 
-    /* Removes and returns the minimum item. Throws NoSuchElementException if the PQ is empty. */
+    /**
+     * Removes and returns the minimum item.
+     * Throws NoSuchElementException if the PQ is empty.
+     */
     @Override
     public T removeSmallest() {
         if (size == 0) {
@@ -67,14 +82,18 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         return min;
     }
 
-    /* Returns the number of items in the PQ. */
+    /**
+     * Returns the number of items in the PQ.
+     */
     @Override
     public int size() {
         return size;
     }
 
-    /* Changes the priority of the given item. Throws NoSuchElementException if the item
-     * doesn't exist. */
+    /**
+     * Changes the priority of the given item.
+     * Throws NoSuchElementException if the item doesn't exist.
+     */
     @Override
     public void changePriority(T item, double priority) {
         if (!contains(item)) {
@@ -91,6 +110,9 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         }
     }
 
+    /***************************************************************************
+     * Helper functions for compares and swaps.
+     ***************************************************************************/
     private boolean lessThan(int i, int j) {
         if (pq.get(i).getPriority() == pq.get(j).getPriority()) {
             if (Math.random() > 0.5) {
@@ -133,6 +155,9 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         }
     }
 
+    /**
+     * Helper class to save value and queue.
+     */
     private class Node {
         private T item;
         private double priority;

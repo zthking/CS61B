@@ -47,7 +47,7 @@ public class KDTreeTest {
         List<Point> points = randomPoints(1000);
         NaivePointSet np = new NaivePointSet(points);
         KDTree kd = new KDTree(points);
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 1000; i++) {
             double x = r.nextDouble();
             double y = r.nextDouble();
             Point npNearest = np.nearest(x, y);

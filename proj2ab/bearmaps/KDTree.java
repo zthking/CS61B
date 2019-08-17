@@ -7,8 +7,6 @@ import java.util.List;
  * This is for CS61B Spring 2019 Project 2b.
  * https://sp19.datastructur.es/materials/proj/proj2ab/proj2ab
  * Solution is not tested by Autograder.
- * Implementation has poor performance on bad side testing and needs improvement.
- * Current implementation will test all bad side.
  */
 public class KDTree {
     /**
@@ -107,7 +105,17 @@ public class KDTree {
             }
         }
         best = findBest(goodSide, point, best);
-        best = findBest(badSide, point, best);
+
+        if (n.evenLevel) {
+            if (Point.distance(point, best.p) > Math.pow((point.getX() - n.p.getX()), 2)) {
+              best = findBest(badSide, point, best);
+            }
+        } else {
+            if (Point.distance(point, best.p) > Math.pow((point.getY() - n.p.getY()), 2)) {
+                best = findBest(badSide, point, best);
+            }
+        }
+
         return best;
     }
 

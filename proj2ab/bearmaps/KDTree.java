@@ -7,6 +7,8 @@ import java.util.List;
  * This is for CS61B Spring 2019 Project 2b.
  * https://sp19.datastructur.es/materials/proj/proj2ab/proj2ab
  * Solution is not tested by Autograder.
+ * Implementation has poor performance on bad side testing and needs improvement.
+ * Current implementation will test all bad side.
  */
 public class KDTree {
     /**
@@ -17,7 +19,6 @@ public class KDTree {
 
     /**
      * Initialize a KDTree using given list of points.
-     *
      * @param points Input list of points.
      */
     public KDTree(List<Point> points) {
@@ -25,7 +26,8 @@ public class KDTree {
             throw new IllegalArgumentException("Input cannot be null!");
         }
         for (Point p : points) {
-            root = buildKDTree(root, p, true);
+            Point newPoint = new Point(p.getX(), p.getY());
+            root = buildKDTree(root, newPoint, true);
         }
     }
 
@@ -36,14 +38,18 @@ public class KDTree {
         if (n == null) {
             return new Node(newPoint, level);
         }
-        if (n.evenLevel && n.p.getX() > newPoint.getX()) {
-            n.left = buildKDTree(n.left, newPoint, !level);
-        } else if (n.evenLevel && n.p.getX() <= newPoint.getX()) {
-            n.right = buildKDTree(n.right, newPoint, !level);
-        } else if (n.evenLevel && n.p.getY() > newPoint.getY()) {
-            n.left = buildKDTree(n.left, newPoint, !level);
+        if (level) {
+            if (n.p.getX() > newPoint.getX()) {
+                n.left = buildKDTree(n.left, newPoint, false);
+            } else {
+                n.right = buildKDTree(n.right, newPoint, false);
+            }
         } else {
-            n.right = buildKDTree(n.right, newPoint, !level);
+            if (n.p.getY() > newPoint.getY()) {
+                n.left = buildKDTree(n.left, newPoint, true);
+            } else {
+                n.right = buildKDTree(n.right, newPoint, true);
+            }
         }
         return n;
     }
@@ -56,48 +62,53 @@ public class KDTree {
      * @return Nearest point at given coordinate.
      */
     public Point nearest(double x, double y) {
-        Point comp = new Point(x, y);
+        Point cmp = new Point(x, y);
+        Node bestNode;
         if (root.left == null && root.right == null) {
             return root.p;
         } else if (root.left == null) {
-            return findBest(root.right, comp);
+            bestNode = findBest(root.right, cmp, new Node(root.p, root.evenLevel));
+            return bestNode.p;
         } else if (root.right == null) {
-            return findBest(root.left, comp);
+            bestNode = findBest(root.left, cmp, new Node(root.p, root.evenLevel));
+            return bestNode.p;
         }
-
-        Point leftSidePoint = findBest(root.left, comp);
-        double leftSideDistance = Point.distance(leftSidePoint, comp);
-
-        Point rightSidePoint = findBest(root.right, comp);
-        double rightSideDistance = Point.distance(rightSidePoint, comp);
-
-        if (leftSideDistance < rightSideDistance) {
-            return leftSidePoint;
-        } else {
-            return rightSidePoint;
-        }
+        bestNode = findBest(root, cmp, new Node(root.p, root.evenLevel));
+        return bestNode.p;
     }
 
     /**
      * Helper method to find the nearest point.
      */
-    private Point findBest(Node n, Point p) {
-        if (n.left == null && n.right == null) {
-            return n.p;
-        } else if (n.left == null) {
-            n = n.right;
-        } else if (n.right == null) {
-            n = n.left;
-        } else if (n.evenLevel && n.p.getX() > p.getX()) {
-            n = n.left;
-        } else if (n.evenLevel && n.p.getX() <= p.getX()) {
-            n = n.right;
-        } else if (n.evenLevel && n.p.getY() > p.getY()) {
-            n = n.left;
-        } else {
-            n = n.right;
+    private Node findBest(Node n, Point point, Node best) {
+        if (n == null) {
+            return best;
         }
-        return findBest(n, p);
+        if (Point.distance(n.p, point) < Point.distance(best.p, point)) {
+            best = n;
+        }
+        Node goodSide;
+        Node badSide;
+        if (n.evenLevel) {
+            if (n.p.getX() > point.getX()) {
+                goodSide = n.left;
+                badSide = n.right;
+            } else {
+                goodSide = n.right;
+                badSide = n.left;
+            }
+        } else {
+            if (n.p.getY() > point.getY()) {
+                goodSide = n.left;
+                badSide = n.right;
+            } else {
+                goodSide = n.right;
+                badSide = n.left;
+            }
+        }
+        best = findBest(goodSide, point, best);
+        best = findBest(badSide, point, best);
+        return best;
     }
 
     /**

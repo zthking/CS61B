@@ -24,15 +24,16 @@ public class NaivePointSet implements PointSet {
     @Override
     public Point nearest(double x, double y) {
         Point comp = new Point(x, y);
-        Point nearestPoint = points.get(0);
-        double d = Point.distance(nearestPoint, comp);
+        Point bestPoint = points.get(0);
+        double bestDistance = Point.distance(bestPoint, comp);
         for (Point p : points) {
             double newDistance = Point.distance(p, comp);
-            if (newDistance < d) {
-                d = newDistance;
-                nearestPoint = p;
+            if (newDistance < bestDistance) {
+                bestDistance = newDistance;
+                bestPoint = p;
             }
+
         }
-        return nearestPoint;
+        return bestPoint;
     }
 }

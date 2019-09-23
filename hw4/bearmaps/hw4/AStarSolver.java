@@ -5,6 +5,14 @@ import edu.princeton.cs.algs4.Stopwatch;
 
 import java.util.*;
 
+/**
+ * Implementation of A* algorithm to find shortest path.
+ * This is prepared for HW4 of CS61b Spring 2019.
+ * https://sp19.datastructur.es/materials/hw/hw4/hw4
+ * Solution is not tested by Autograder.
+ * Solution gives different result on wordladderpuzzle test
+ * comparing to the solution given in the lecture..
+ */
 public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
     private double timeSpent;
     private SolverOutcome outcome;
@@ -14,6 +22,14 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
     private Vertex end;
     private int numStatesExplored;
 
+    /**
+     * Constructor to find shortest path.
+     * @param input Input that contains all possible vertices
+     *              and estimated distance from one vertex to goal vertex.
+     * @param start Starting vertex.
+     * @param end Goal vertex.
+     * @param timeout Maximum time in second that algorithm can run.
+     */
     public AStarSolver(AStarGraph<Vertex> input, Vertex start, Vertex end, double timeout) {
         if (timeout < 0 || input == null || start == null || end == null) {
             throw new IllegalArgumentException();
@@ -25,7 +41,7 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
         solutionVertex = new HashMap<>();
         HashSet<Vertex> visited = new HashSet<>();
         numStatesExplored = 0;
-        //Stopwatch sw = new Stopwatch();
+        Stopwatch sw = new Stopwatch();
 
         DoubleMapPQ<Vertex> vertexPQ = new DoubleMapPQ<>();
         vertexPQ.add(start, input.estimatedDistanceToGoal(start, end));
@@ -45,6 +61,10 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
                     break;
                 }
 
+                if (timeSpent > timeout) {
+                    outcome = SolverOutcome.TIMEOUT;
+                    break;
+                }
 
                 List<WeightedEdge<Vertex>> neighbourEdges = input.neighbors(p);
                 for (WeightedEdge<Vertex> e : neighbourEdges) {
@@ -66,14 +86,23 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
                     }
                 }
             }
+            timeSpent = sw.elapsedTime();
         }
     }
 
+    /**
+     * Return SOLVED if the shortest path is found.
+     * Return UNSOLVED if the goal is not in Input.
+     * Return TIMEOUT if the total run time is greater than timeout.
+     */
     @Override
     public SolverOutcome outcome() {
         return outcome;
     }
 
+    /**
+     * Return vertices in the shortest path in a list.
+     */
     @Override
     public List<Vertex> solution() {
         if (outcome == SolverOutcome.TIMEOUT || outcome == SolverOutcome.UNSOLVABLE) {
@@ -90,6 +119,9 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
         return solution;
     }
 
+    /**
+     * Return the total length of the shortest path.
+     */
     @Override
     public double solutionWeight() {
         if (outcome == SolverOutcome.TIMEOUT || outcome == SolverOutcome.UNSOLVABLE) {
@@ -98,11 +130,17 @@ public class AStarSolver<Vertex> implements ShortestPathsSolver<Vertex> {
         return solutionMap.get(end);
     }
 
+    /**
+     * Return total numbers of vertices explored.
+     */
     @Override
     public int numStatesExplored() {
         return numStatesExplored;
     }
 
+    /**
+     * Return total run time.
+     */
     @Override
     public double explorationTime() {
         return timeSpent;

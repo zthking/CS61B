@@ -45,6 +45,15 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
     private static final String[] REQUIRED_RASTER_RESULT_PARAMS = {"render_grid", "raster_ul_lon",
             "raster_ul_lat", "raster_lr_lon", "raster_lr_lat", "depth", "query_success"};
 
+    /**
+     * Width of the root image.
+     */
+    private static final double ROOT_W = Constants.ROOT_LRLON - Constants.ROOT_ULLON;
+    private static final double ROOT_H = Constants.ROOT_ULLAT - Constants.ROOT_LRLAT;
+    /**
+     *Longitudinal distance per pixel (LonDPP) of the root image.
+     */
+    private static final double ROOT_LONDPP = ROOT_W / Constants.TILE_SIZE;
 
     @Override
     protected Map<String, Double> parseRequestParams(Request request) {
@@ -84,12 +93,106 @@ public class RasterAPIHandler extends APIRouteHandler<Map<String, Double>, Map<S
      */
     @Override
     public Map<String, Object> processRequest(Map<String, Double> requestParams, Response response) {
-        //System.out.println("yo, wanna know the parameters given by the web browser? They are:");
-        //System.out.println(requestParams);
         Map<String, Object> results = new HashMap<>();
-        System.out.println("Since you haven't implemented RasterAPIHandler.processRequest, nothing is displayed in "
-                + "your browser.");
+        double lrlon = requestParams.get("lrlon");
+        double ullon = requestParams.get("ullon");
+        double ullat = requestParams.get("ullat");
+        double lrlat = requestParams.get("lrlat");
+        double w = requestParams.get("w");
+
+        double lonDPP = (lrlon - ullon) / w;
+        int depth = getDepth(lonDPP);
+
+        int[] xBound = getXBound(ullon, lrlon, depth);
+        int[] yBound = getYBound(ullat, lrlat, depth);
+
+        String[][] render_grid = getRenderGrid(depth, xBound, yBound);
+
+        boolean query_success = true;
+
+        if(lrlat < Constants.ROOT_LRLAT || ullat > Constants.ROOT_ULLAT ||
+                lrlon > Constants.ROOT_LRLON || ullon < Constants.ROOT_ULLON) {
+            query_success = false;
+        }
+
+        results.put("depth", depth);
+        results.put("query_success", query_success);
+        results.put("render_grid", render_grid);
+
+        double x_step = ROOT_W / Math.pow(2, depth);
+        double y_step = ROOT_H / Math.pow(2, depth);
+        results.put("raster_ul_lon", Constants.ROOT_ULLON + xBound[0] * x_step);
+        results.put("raster_lr_lon", Constants.ROOT_ULLON + (1.0 + xBound[1]) * x_step);
+        results.put("raster_ul_lat", Constants.ROOT_ULLAT - yBound[0] * y_step);
+        results.put("raster_lr_lat", Constants.ROOT_ULLAT - (1.0 + yBound[1]) * y_step);
         return results;
+    }
+
+    /**
+     * Find the depth level of zoom to meet user's input requirement.
+     * @param lonDPP lonDPP of user's input.
+     * @return Level of zoom. Max is 7.
+     */
+    private int getDepth(double lonDPP) {
+        int depth = 0;
+        while (ROOT_LONDPP > lonDPP) {
+            depth += 1;
+            lonDPP *= 2;
+        }
+        return Math.min(depth, 7);
+    }
+
+    private int[] getXBound(double ullon, double lrlon, int depth) {
+        int x;
+        int[] res = new int[2];
+        double step = ROOT_W / Math.pow(2, depth);
+        double curr = Constants.ROOT_ULLON + step;
+        for (x = 0; curr < ullon; x += 1) {
+            curr += step;
+        }
+        res[0] = x;
+        for ( ; curr < lrlon; x += 1) {
+            curr += step;
+            if (curr > Constants.ROOT_LRLON) {
+                break;
+            }
+        }
+        res[1] = x;
+        return res;
+    }
+
+    private int[] getYBound(double ullat, double lrlat, int depth) {
+        int y;
+        double step = ROOT_H / Math.pow(2, depth);
+        int[] res = new int[2];
+        double curr = Constants.ROOT_ULLAT - step;
+        for (y = 0; curr > ullat; y += 1) {
+            curr -= step;
+        }
+        res[0] = y;
+        for (; curr > lrlat; y += 1) {
+            curr -= step;
+            if (curr < Constants.ROOT_LRLAT) {
+                break;
+            }
+        }
+        res[1] = y;
+        return res;
+    }
+
+    private String[][] getRenderGrid(int depth, int[] xBound, int[] yBound) {
+        int x1 = xBound[0];
+        int x2 = xBound[1];
+        int y1 = yBound[0];
+        int y2 = yBound[1];
+
+        String[][] res = new String[y2 - y1 + 1][x2 - x1 + 1];
+        for(int y = y1; y <= y2; y += 1) {
+            for (int x = x1; x <= x2; x += 1) {
+                res[y - y1][x - x1] = "d" + depth + "_x" + x + "_y" + y + ".png";
+            }
+        }
+        return res;
     }
 
     @Override
